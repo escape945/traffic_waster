@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Waste Traffic</title>
+    <link rel="stylesheet" href="https://unpkg.com/mdui@1.0.2/dist/css/mdui.min.css" />
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <div id="app">
+        <h1 class="title">Waste Traffic</h1>
+        <div class="tools">
+            <div class="mdui-chip refresh-page">
+                <span class="mdui-chip-icon mdui-color-blue">
+                    <i class="mdui-icon material-icons">refresh</i>
+                </span>
+                <span class="mdui-chip-title">刷新页面</span>
+            </div>
+            <div class="mdui-chip reset-data">
+                <span class="mdui-chip-icon mdui-color-red">
+                    <i class="mdui-icon material-icons">close</i>
+                </span>
+                <span class="mdui-chip-title">重置数据</span>
+            </div>
+            <div class="mdui-chip">
+                <span class="mdui-chip-icon">
+                    <i class="mdui-icon material-icons">perm_device_information</i>
+                </span>
+                <span class="mdui-chip-title">页面施工中&ensp;
+                    <span class="version">{{this.parameter.version}}</span></span>
+            </div>
+        </div>
+        <div class="module-settings">
+            <div class="block-operate">停止后允许修改</div>
+            <div class="source">
+                <text>测试源<br></text>
+                <select class="mdui-select">
+                    <option value="">自定义链接</option>
+                    <option value="https://cachefly.cachefly.net/100mb.bin">Cachefly (Default)</option>
+                    <option value="https://game.gtimg.cn/images/nz/web202106/index/bc_part1.gif">腾讯</option>
+                    <option value="https://pic-bucket.ws.126.net/photo/0003/2022-04-24/H5N2082C00AJ0003NOS.jpg">网易</option>
+                    <option value="https://lf9-cdn-tos.bytecdntp.com/cdn/yuntu-index/1.0.4/case/maiteng/detailbg.png">头条</option>
+                    <option value="https://s2-10623.kwimgs.com/kos/nlav10623/vision_images/topBannerx1.png">快手</option>
+                    <option value="https://cdn.cnbj1.fds.api.mi-img.com/miui-13/phone/index_pc_1227.mp4">小米</option>
+                    <option value="https://wwwstatic.vivo.com.cn/vivoportal/files/resource/funtouch/1651200648928/images/os2-jude-video.mp4">vivo</option>
+                    <option value="https://img1.shop.10086.cn/goods/tcqtjwurkdsfcxgr_940x7200">移动</option>
+                    <option value="https://img.cmvideo.cn/publish/noms/2022/10/14/1O3VIGPVP6HTS.jpg">咪咕视频</option>
+                    <option value="https://speed.cloudflare.com/__down?bytes=25000000">Cloudflare</option>
+                    <option value="https://sgp-ping.vultr.com/vultr.com.1000MB.bin">Vultr(新加坡)</option>
+                    <option value="https://nj-us-ping.vultr.com/vultr.com.1000MB.bin">Vultr(纽约)</option>
+                    <option value="https://gh.con.sh/https://github.com/AaronFeng753/Waifu2x-Extension-GUI/releases/download/v2.21.12/Waifu2x-Extension-GUI-v2.21.12-Portable.7z">GitHub文件加速(Cloudflare)</option>
+                </select>
+                <div class="mdui-textfield">
+                    <input class="mdui-textfield-input" type="url" placeholder="自定义链接" value="https://cachefly.cachefly.net/100mb.bin" />
+                </div>
+            </div>
+            <div class="thread">
+                <text>测试线程&ensp;(<span class="now">{{this.parameter.thread}}</span>)</text>
+                <label class="mdui-slider mdui-slider-discrete">
+                    <input type="range" step="1" min="1" max="32" value="1" />
+                </label>
+            </div>
+            <div class="limit">
+                <label class="mdui-switch">
+                    <input type="checkbox" checked />
+                    <i class="mdui-switch-icon"></i>
+                </label>&ensp;无限制消耗
+            </div>
+        </div>
+        <div class="run">
+            <button class="mdui-btn mdui-btn-raised mdui-ripple m3-color mdui-btn-block">
+                点击<span>{{is_run?'停止':'开始'}}</span>
+            </button>
+        </div>
+        <div class="status">
+            <ul class="mdui-list">
+                <li class="mdui-list-item mdui-ripple">
+                    <i class="mdui-list-item-icon mdui-icon material-icons">data_usage</i>
+                    <div class="mdui-list-item-content">
+                        已消耗流量<br><span class="total_waste">{{autoUnitSize(wasted, 2)}}</span>
+                    </div>
+                </li>
+                <li class="mdui-list-item mdui-ripple">
+                    <i class="mdui-list-item-icon mdui-icon material-icons">av_timer</i>
+                    <div class="mdui-list-item-content">
+                        实时消耗<br><span class="waste_per_second">{{autoUnitSize(this.parameter.speed, 2)}}</span>/s
+                    </div>
+                </li>
+                <li class="mdui-list-item mdui-ripple">
+                    <i class="mdui-list-item-icon mdui-icon material-icons">access_time</i>
+                    <div class="mdui-list-item-content">
+                        运行时长<br><span class="run_time">{{autoUnitTime(time)}}</span>
+                    </div>
+                </li>
+                <li class="mdui-list-item mdui-ripple">
+                    <i class="mdui-list-item-icon mdui-icon material-icons">description</i>
+                    <div class="mdui-list-item-content">
+                        当前IP<br><span class="ips">{{this.parameter.ip}}</span>
+                    </div>
+                </li>
+                <li class="mdui-list-item mdui-ripple">
+                    <i class="mdui-list-item-icon"></i>
+                    <div class="mdui-list-item-content">Report Abuse</div>
+                </li>
+            </ul>
+        </div>
+</body>
+
+<script src="https://unpkg.com/mdui@1.0.2/dist/js/mdui.min.js"></script>
+<script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+<script src="script.js"></script>
+
+</html>
